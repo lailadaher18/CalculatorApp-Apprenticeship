@@ -11,3 +11,8 @@ It chose Selenium for the frontend testing that works well with Cucumber for the
 And it chose JUnit for the backend tests.
 
 I adjusted the tests to match my logic and added some additional tests to make everything work together and run correctly in the limited time I had.
+
+To Run the Tests:
+1. Ensure you have the necessary dependencies installed (build.gradle).
+2. For the backend tests, run the JUnit tests (CalculatorTest.java) using your IDE or command line.
+3. For the frontend tests, run the Cucumber tests (calculator.feature) which will execute the Selenium tests.
