@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Simple Calculator</h1>
+<div class="container">
+
+  <form action="">
+    <div class="screen">
+      <input type="text" name="display" id="display">
+    </div>
+    <div class="numpad">
+      <div>
+        <input class="btn" type="button" value="AC" onclick="display.value =''">
+        <input class="btn" type="button" value="C" onclick="display.value = display.value.toString().slice(0,-1)">
+        <input class="btn" type="button" value="%" onclick="appendNumber('%')" >
+        <input class="btn" type="button" value="/" onclick="appendNumber('/')" >
+      </div>
+      <div>
+        <input class="btn" type="button" value="7" onclick="appendNumber('7')">
+        <input class="btn" type="button" value="8" onclick="appendNumber('8')">
+        <input class="btn" type="button" value="9" onclick="appendNumber('9')">
+        <input class="btn" type="button" value="*" onclick="appendNumber('*')">
+      </div>
+      <div>
+        <input class="btn" type="button" value="4" onclick="appendNumber('4')">
+        <input class="btn" type="button" value="5" onclick="appendNumber('5')">
+        <input class="btn" type="button" value="6" onclick="appendNumber('6')">
+        <input class="btn" type="button" value="-" onclick="appendNumber('-')">
+      </div>
+      <div>
+        <input class="btn" type="button" value="1" onclick="appendNumber('1')">
+        <input class="btn" type="button" value="2" onclick="appendNumber('2')">
+        <input class="btn" type="button" value="3" onclick="appendNumber('3')">
+        <input class="btn" type="button" value="+" onclick="appendNumber('+')">
+      </div>
+      <div>
+        <input class="btn" type="button" value="00" onclick="appendNumber('00')">
+        <input class="btn" type="button" value="0" onclick="appendNumber('0')">
+        <input class="btn" type="button" value="." onclick="appendNumber('.')">
+        <input class="btn" type="button" value="=" onclick="calculateFromBackend()">
+
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+  let calculationJustCompleted = false;
+    async function calculateFromBackend() {
+        const expression = document.getElementById('display').value;
+        const currentDisplayValue = document.getElementById('display').value;
+        try {
+            const response = await fetch('/api/calculate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ expression: expression })
+            });
+            const result = await response.json();
+            if (response.ok) {
+                document.getElementById('display').value = result.result;
+                calculationJustCompleted = true;
+            } else if (!response.ok)  {
+                document.getElementById('display').value = result.result ;
+                calculationJustCompleted = true;
+            }else{
+                document.getElementById('display').value = currentDisplayValue;
+            }
+        } catch (error) {
+            document.getElementById('display').value = 'Error, click AC to clear';
+        }
+    }
+  function appendNumber(num) {
+    if (calculationJustCompleted && !isNaN(num)) {
+      document.getElementById('display').value = num;
+    } else {
+      document.getElementById('display').value += num;
+    }
+    // Reset the flag after any input is processed
+    calculationJustCompleted = false;
+  }
+</script>
+</body>
+</html>
